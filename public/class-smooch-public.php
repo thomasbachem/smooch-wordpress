@@ -110,45 +110,38 @@ class Smooch_Public {
 		*/
 
 		get_currentuserinfo();
-
-		$givenName = $current_user->user_firstname;
-		$surname = $current_user->user_lastname;
-		$email = $current_user->user_email;
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Smooch_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Smooch_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-		$options = get_option( $this->plugin_name . '-options' );	?>
+		
+		$options = get_option( $this->plugin_name . '-options' );
+		
+		$initOptions = array(
+			'appToken'             => $options['app-token'],
+			'emailCaptureEnabled'  => true,
+			'customText' => array(
+				'headerText'       => $options['header-text'],
+				'inputPlaceholder' => $options['input-placeholder'],
+				'sendButtonText'   => $options['send-button-text'],
+				'introductionText' => $options['intro-text'],
+				'introAppText'     => $options['intro-app-text'],
+			),
+		);
+		
+		if($givenName = $current_user->user_firstname) {
+			$initOptions['givenName'] = $givenName;
+		}
+		if($surname = $current_user->user_lastname) {
+			$initOptions['surname'] = $surname;
+		}
+		if($email = $current_user->user_email) {
+			$initOptions['email'] = $email;
+		}
+		
+		?>
 		<!-- SK Init -->
 		<script>
-        function loadScript(src, callback) { var s, r, t; r = false; s = document.createElement('script'); s.type = 'text/javascript'; s.src = src; s.onload = s.onreadystatechange = function() { if ( !r && (!this.readyState || this.readyState == 'complete') ) { r = true; callback(); } }; t = document.getElementsByTagName('script')[0]; t.parentNode.insertBefore(s, t); }
-        loadScript('https://cdn.smooch.io/smooch.min.js', function() {
-    		Smooch.init(
-    			{
-						appToken: <?php echo(json_encode($options['app-token']));?>,
-						givenName: <?php echo(json_encode($givenName));?>,
-		    			surname: <?php echo(json_encode($surname));?>,
-		    			email: <?php echo(json_encode($email));?>,
-		    			emailCaptureEnabled: true,
-					    customText: {
-		        			headerText: <?php echo(json_encode($options['header-text']));?>,
-		        			inputPlaceholder: <?php echo(json_encode($options['input-placeholder']));?>,
-		        			sendButtonText: <?php echo(json_encode($options['send-button-text']));?>,
-		        			introductionText: <?php echo(json_encode($options['intro-text']));?>,
-									introAppText: <?php echo(json_encode($options['intro-app-text']));?>
-}
-    			});
-        });
+			function loadScript(src, callback) { var s, r, t; r = false; s = document.createElement('script'); s.type = 'text/javascript'; s.src = src; s.onload = s.onreadystatechange = function() { if ( !r && (!this.readyState || this.readyState == 'complete') ) { r = true; callback(); } }; t = document.getElementsByTagName('script')[0]; t.parentNode.insertBefore(s, t); }
+			loadScript('https://cdn.smooch.io/smooch.min.js', function() {
+			Smooch.init(<?php echo(json_encode($initOptions));?>);
 		</script>
-
 		<?php
 	}
 }
