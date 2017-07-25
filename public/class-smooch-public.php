@@ -129,42 +129,22 @@ class Smooch_Public {
 		$options = get_option( $this->plugin_name . '-options' );	?>
 		<!-- SK Init -->
 		<script>
-		var decodeEntities = (function() {
-		  // this prevents any overhead from creating the object each time
-		  var element = document.createElement('div');
-
-		  function decodeHTMLEntities (str) {
-		    if(str && typeof str === 'string') {
-		      // strip script/html tags
-		      str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
-		      str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-		      element.innerHTML = str;
-		      str = element.textContent;
-		      element.textContent = '';
-		    }
-
-		    return str;
-		  }
-
-		  return decodeHTMLEntities;
-		})();
-
         function loadScript(src, callback) { var s, r, t; r = false; s = document.createElement('script'); s.type = 'text/javascript'; s.src = src; s.onload = s.onreadystatechange = function() { if ( !r && (!this.readyState || this.readyState == 'complete') ) { r = true; callback(); } }; t = document.getElementsByTagName('script')[0]; t.parentNode.insertBefore(s, t); }
         loadScript('https://cdn.smooch.io/smooch.min.js', function() {
     		Smooch.init(
     			{
-						appToken: decodeEntities('<?php echo(htmlentities($options['app-token'], ENT_QUOTES));?>'),
-						givenName: decodeEntities('<?php echo(htmlentities($givenName, ENT_QUOTES));?>'),
-		    			surname: decodeEntities('<?php echo(htmlentities($surname, ENT_QUOTES));?>'),
-		    			email: decodeEntities('<?php echo(htmlentities($email, ENT_QUOTES));?>'),
+						appToken: <?php echo(json_encode($options['app-token']));?>,
+						givenName: <?php echo(json_encode($givenName));?>,
+		    			surname: <?php echo(json_encode($surname));?>,
+		    			email: <?php echo(json_encode($email));?>,
 		    			emailCaptureEnabled: true,
 					    customText: {
-		        			headerText: decodeEntities('<?php echo(htmlentities($options['header-text'], ENT_QUOTES));?>'),
-		        			inputPlaceholder: decodeEntities('<?php echo(htmlentities($options['input-placeholder'], ENT_QUOTES));?>'),
-		        			sendButtonText: decodeEntities('<?php echo(htmlentities($options['send-button-text'], ENT_QUOTES));?>'),
-		        			introductionText: decodeEntities('<?php echo(htmlentities($options['intro-text'], ENT_QUOTES));?>'),
-									introAppText: decodeEntities('<?php echo(htmlentities($options['intro-app-text'], ENT_QUOTES));?>')
-		    			}
+		        			headerText: <?php echo(json_encode($options['header-text']));?>,
+		        			inputPlaceholder: <?php echo(json_encode($options['input-placeholder']));?>,
+		        			sendButtonText: <?php echo(json_encode($options['send-button-text']));?>,
+		        			introductionText: <?php echo(json_encode($options['intro-text']));?>,
+									introAppText: <?php echo(json_encode($options['intro-app-text']));?>
+}
     			});
         });
 		</script>
